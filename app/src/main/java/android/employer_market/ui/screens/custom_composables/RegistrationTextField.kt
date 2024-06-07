@@ -11,15 +11,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun RegistrationTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
     keyboardActions: KeyboardActions = KeyboardActions(),
-    label: String,
-    lastField: Boolean
+    label: String="",
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    placeholder: @Composable () -> Unit = {},
+    isError: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
@@ -27,12 +31,12 @@ fun RegistrationTextField(
         modifier = Modifier.fillMaxWidth(),
         label = { Text(text = label) },
         singleLine = true,
-        keyboardOptions = KeyboardOptions(
-            autoCorrect = false,
-            imeAction = if (lastField) ImeAction.Done else ImeAction.Next
-        ),
+        keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
+        visualTransformation = visualTransformation,
+        placeholder = placeholder,
+        isError = isError
     )
     Spacer(modifier = Modifier.padding(4.dp))
 }

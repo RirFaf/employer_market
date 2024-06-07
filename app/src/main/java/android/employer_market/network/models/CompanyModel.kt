@@ -3,6 +3,6 @@ package android.employer_market.network.models
 data class CompanyModel(
     val id:String,
     val userAuthData: UserAuthData,
-    val companyName: String,
+    val name: String,
     val city: String,
 )

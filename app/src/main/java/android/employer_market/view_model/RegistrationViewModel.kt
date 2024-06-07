@@ -2,8 +2,7 @@ package android.employer_market.view_model
 
 import android.employer_market.app.DefaultApplication
 import android.employer_market.data.repository.RegistrationRepository
-import android.employer_market.network.SMFirebase
-import android.employer_market.network.models.CompanyModel
+import android.employer_market.data.repository.SMFirebase
 import android.employer_market.view_model.event.RegistrationEvent
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -18,13 +17,11 @@ import kotlinx.coroutines.flow.update
 
 sealed interface RegUIState {
     data class Success(
-        val companyname: String = "",
+        val companyName: String = "",
         val city: String = "",
-        val course: String = "",
         val email: String = "",
         val password: String = "",
-        val isPasswordBlank: Boolean = true,
-        val isLoginBlank: Boolean = true,
+        val password1: String = "",
     ) : RegUIState
 
     object Error : RegUIState
@@ -35,7 +32,7 @@ class RegViewModel(
     private val registrationRepository: RegistrationRepository
 ) : ViewModel() {
     private val tag = "VMTAG"
-    private val db = SMFirebase()
+    private val db = SMFirebase
 
     private val _uiState = MutableStateFlow(RegUIState.Success())//переделать под обработку REST
 
@@ -53,14 +50,12 @@ class RegViewModel(
     fun onEvent(event: RegistrationEvent) {
         when (event) {
             is RegistrationEvent.AddUser -> {
-                if (!_uiState.value.isLoginBlank && !_uiState.value.isPasswordBlank) {
-                    db.addUser(
-                        CompanyModel(
-                            companyName = _uiState.value.companyname,
-                            city = _uiState.value.city,
-                            email = _uiState.value.email,
-                            password = _uiState.value.password,
-                        ),
+                if (_uiState.value.email.isNotBlank() && _uiState.value.password.isNotBlank() && (_uiState.value.password == _uiState.value.password1)) {
+                    registrationRepository.register(
+                        login = _uiState.value.email,
+                        password = _uiState.value.password,
+                        city = _uiState.value.city,
+                        companyName = _uiState.value.companyName,
                         onSuccessAction = {
                             event.onSuccessAction()
                         },
@@ -68,10 +63,15 @@ class RegViewModel(
                             event.onFailureAction()
                         }
                     )
-                } else if (!uiState.value.isLoginBlank) {
+                }
+                if (uiState.value.email.isBlank()) {
                     event.onEmptyLoginAction()
-                } else {
+                    Log.d("FirebaseTag", "Login empty")
+
+                }
+                if (uiState.value.password.isBlank() || (_uiState.value.password != _uiState.value.password1)) {
                     event.onEmptyPasswordAction()
+                    Log.d("FirebaseTag", "password empty")
                 }
             }
 
@@ -83,12 +83,18 @@ class RegViewModel(
                 }
             }
 
+            is RegistrationEvent.SetCompanyName -> {
+                _uiState.update {
+                    it.copy(
+                        companyName = event.input
+                    )
+                }
+            }
 
             is RegistrationEvent.SetEmail -> {
                 _uiState.update {
                     it.copy(
                         email = event.input,
-                        isLoginBlank = event.input.isBlank()
                     )
                 }
             }
@@ -98,15 +104,14 @@ class RegViewModel(
                 _uiState.update {
                     it.copy(
                         password = event.input,
-                        isPasswordBlank = event.input.isBlank()
                     )
                 }
             }
 
-            is RegistrationEvent.SetCompanyName -> {
+            is RegistrationEvent.SetPassword1 -> {
                 _uiState.update {
                     it.copy(
-                        companyname = event.input
+                        password1 = event.input,
                     )
                 }
             }
@@ -118,8 +123,7 @@ class RegViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as DefaultApplication)
-                val registrationRepository = application.container.registrationRepository // TODO:
-                val sessionManager = application.sessionManager
+                val registrationRepository = application.container.registrationRepository
                 RegViewModel(registrationRepository = registrationRepository)
             }
         }

@@ -6,7 +6,7 @@ sealed class Screen(
     /***Authentication***/
     object LogRegScreen : Screen("log_reg_screen")
     object RegistrationScreen : Screen("registration_screen")
-    object NameAndGenderScreen : Screen("name_and_gender_screen")
+    object CompanyInfo : Screen("company_info_screen")
     object EmailAndPasswordScreen : Screen("email_and_password_screen")
     object LoginScreen : Screen("login_screen")
 

@@ -43,7 +43,6 @@ class ProfileViewModel : ViewModel() {
             is ProfileEvent.SetPhoneNumber -> {
                 _uiState.update {
                     it.copy(
-                        student = it.student?.copy(phone = event.input)
                     )
                 }
             }

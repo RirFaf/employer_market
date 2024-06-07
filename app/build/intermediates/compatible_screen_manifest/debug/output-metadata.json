@@ -4,7 +4,7 @@
     "type": "COMPATIBLE_SCREEN_MANIFEST",
     "kind": "Directory"
   },
-  "applicationId": "android.skills_market",
+  "applicationId": "android.employer_market",
   "variantName": "debug",
   "elements": []
 }

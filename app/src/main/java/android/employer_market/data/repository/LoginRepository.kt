@@ -1,17 +1,36 @@
 package android.employer_market.data.repository
 
-import android.employer_market.network.AuthApiService
+import android.employer_market.data.constants.TAG
 import android.employer_market.network.models.requests.AuthRequest
 import android.employer_market.network.models.responses.AuthResponse
-import retrofit2.Call
+import android.util.Log
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 interface LoginRepository {
-    suspend fun login(authRequest: AuthRequest): Call<AuthResponse>
+    fun login(
+        onSuccessAction: () -> Unit,
+        onFailureAction: () -> Unit,
+        login: String,
+        password: String
+    )
 }
 
-class NetworkLoginRepository(
-    private val authApiService: AuthApiService
+class FirebaseLoginRepository(
 ) : LoginRepository {
-    override suspend fun login(authRequest: AuthRequest): Call<AuthResponse> =
-        authApiService.login(authRequest)
+    override fun login(
+        onSuccessAction: () -> Unit,
+        onFailureAction: () -> Unit,
+        login: String,
+        password: String
+    ) {
+        Firebase.auth.signInWithEmailAndPassword(login, password)
+            .addOnSuccessListener {
+                onSuccessAction()
+            }
+            .addOnFailureListener {
+                Log.e(TAG.FIREBASE, it.toString())
+                onFailureAction()
+            }
+    }
 }

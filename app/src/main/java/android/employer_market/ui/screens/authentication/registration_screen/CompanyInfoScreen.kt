@@ -11,23 +11,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 
 @Composable
-fun NameAndGenderScreen(
+fun CompanyInfoScreen(
     navController: NavController,
     onEvent: (RegistrationEvent) -> Unit,
     uiState: RegUIState.Success//TODO убрать Success
 ) {
+    var isCityWrong by remember {
+        mutableStateOf(false)
+    }
+    var isCompanyWrong by remember {
+        mutableStateOf(false)
+    }
     OutlinedCard(
         modifier = Modifier
             .wrapContentSize()
@@ -40,26 +53,65 @@ fun NameAndGenderScreen(
             verticalArrangement = Arrangement.Center
         ) {
             RegistrationTextField(
-                value = uiState.companyname,
+                value = uiState.companyName,
                 onValueChange = {
                     onEvent(RegistrationEvent.SetCompanyName(it))
+                    isCompanyWrong = false
                 },
-                keyboardActions = KeyboardActions(),
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words,
+                    autoCorrectEnabled = false,
+                    imeAction = ImeAction.Next
+                ),
                 label = stringResource(R.string.company_name),
-                lastField = false
+                isError = isCompanyWrong
             )
             RegistrationTextField(
-                value = uiState.companyname,
+                value = uiState.city,
                 onValueChange = {
                     onEvent(RegistrationEvent.SetCity(it))
+                    isCityWrong = false
                 },
-                keyboardActions = KeyboardActions(),
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words,
+                    autoCorrectEnabled = false,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (
+                            uiState.companyName.isNotBlank() &&
+                            uiState.city.isNotBlank()
+                        ) {
+                            navController.navigate(Screen.EmailAndPasswordScreen.route)
+                        }
+                        if (uiState.city.isBlank()) {
+                            isCityWrong = true
+                        }
+                        if (uiState.companyName.isBlank()) {
+                            isCompanyWrong = true
+                        }
+                    }
+                ),
                 label = "Город",
-                lastField = false
+                isError = isCityWrong
             )
 
             Button(
-                onClick = { navController.navigate(Screen.EmailAndPasswordScreen.route) },
+                onClick = {
+                    if (
+                        uiState.companyName.isNotBlank() &&
+                        uiState.city.isNotBlank()
+                    ) {
+                        navController.navigate(Screen.EmailAndPasswordScreen.route)
+                    }
+                    if (uiState.city.isBlank()) {
+                        isCityWrong = true
+                    }
+                    if (uiState.companyName.isBlank()) {
+                        isCompanyWrong = true
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(

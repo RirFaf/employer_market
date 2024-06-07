@@ -4,7 +4,7 @@ import android.employer_market.ui.screens.authentication.LogRegScreen
 import android.employer_market.ui.screens.authentication.LoginScreen
 import android.employer_market.ui.screens.authentication.registration_screen.RegistrationScreen
 import android.employer_market.ui.screens.authentication.registration_screen.EmailAndPasswordScreen
-import android.employer_market.ui.screens.authentication.registration_screen.NameAndGenderScreen
+import android.employer_market.ui.screens.authentication.registration_screen.CompanyInfoScreen
 import android.employer_market.view_model.LoginViewModel
 import android.employer_market.view_model.RegUIState
 import android.employer_market.view_model.RegViewModel
@@ -166,7 +166,7 @@ fun RegGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.EmailAndPasswordScreen.route,
+        startDestination = Screen.CompanyInfo .route,
     ) {
         composable(
             route = Screen.EmailAndPasswordScreen.route,
@@ -196,7 +196,7 @@ fun RegGraph(
             )
         }
         composable(
-            route = Screen.NameAndGenderScreen.route,
+            route = Screen.CompanyInfo.route,
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(250, easing = LinearEasing),
@@ -234,7 +234,7 @@ fun RegGraph(
                 )
             }
         ) {
-            NameAndGenderScreen(
+            CompanyInfoScreen(
                 navController = navController,
                 onEvent = onEvent,
                 uiState = state

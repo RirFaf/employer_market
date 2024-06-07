@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.employer_market.R
 import android.employer_market.activities.LogRegActivity
-import android.employer_market.network.SMFirebase
+import android.employer_market.data.repository.SMFirebase
 import android.employer_market.ui.navigation.Screen
 import android.employer_market.ui.screens.custom_composables.CustomText
 import android.employer_market.view_model.ProfileUIState
@@ -61,7 +61,7 @@ fun ProfileScreen(
             TopAppBar(
                 title = { Text(text = "Профиль") },
                 actions = {
-                    val database = SMFirebase()
+                    val database = SMFirebase
                     IconButton(
                         onClick = {
                             Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)

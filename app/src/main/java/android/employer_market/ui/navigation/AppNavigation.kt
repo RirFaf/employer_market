@@ -73,7 +73,7 @@ fun NavigationGraph(navController: NavHostController) {
                     "/{id}" +
                     "/{position}" +
                     "/{salary}" +
-                    "/{companyName}" +
+                    "/{name}" +
                     "/{edArea}" +
                     "/{formOfEmployment}" +
                     "/{requirements}" +
@@ -89,7 +89,7 @@ fun NavigationGraph(navController: NavHostController) {
                 navArgument(name = "salary") {
                     type = NavType.IntType
                 },
-                navArgument(name = "companyName") {
+                navArgument(name = "name") {
                     type = NavType.StringType
                 },
                 navArgument(name = "edArea") {
@@ -119,7 +119,7 @@ fun NavigationGraph(navController: NavHostController) {
                     id = it.arguments?.getInt("id")!!,
                     position = it.arguments?.getString("position")!!,
                     salary = it.arguments?.getInt("salary")!!,
-                    companyName = it.arguments?.getString("companyName")!!,
+                    companyName = it.arguments?.getString("name")!!,
                     edArea = it.arguments?.getString("edArea")!!,
                     formOfEmployment = it.arguments?.getString("formOfEmployment")!!,
                     requirements = it.arguments?.getString("requirements")!!,

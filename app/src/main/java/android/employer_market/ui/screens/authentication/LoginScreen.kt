@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.employer_market.R
 import android.employer_market.activities.AppActivity
+import android.employer_market.ui.navigation.Screen
 import android.employer_market.ui.theme.Typography
 import android.employer_market.view_model.LoginUIState
 import android.employer_market.view_model.event.LoginEvent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +48,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +60,12 @@ fun LoginScreen(
     val localContext = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     var passwordVisible by remember { mutableStateOf(false) }
-
+    var isLoginWrong by remember {
+        mutableStateOf(false)
+    }
+    var isPasswordWrong by remember {
+        mutableStateOf(false)
+    }
     Scaffold(
         topBar = {
             MediumTopAppBar(
@@ -66,8 +74,11 @@ fun LoginScreen(
                     Row(
                         modifier = Modifier
                             .clickable {
-                                navController.popBackStack()
-                            },
+                                navController.navigate(Screen.LogRegScreen.route){
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                }                            },
                         horizontalArrangement = Arrangement.Start
                     ) {
                         Icon(
@@ -106,6 +117,7 @@ fun LoginScreen(
                     OutlinedTextField(
                         value = state.email,
                         onValueChange = {
+                            isLoginWrong = false
                             onEvent(LoginEvent.SetLogin(it))
                         },
                         modifier = Modifier
@@ -117,12 +129,14 @@ fun LoginScreen(
                             imeAction = ImeAction.Next,
                             keyboardType = KeyboardType.Email
                         ),
-                        shape = shapes.medium
+                        shape = shapes.medium,
+                        isError = isLoginWrong
                     )
                     Spacer(modifier = Modifier.padding(4.dp))
                     OutlinedTextField(
                         value = state.password,
                         onValueChange = {
+                            isPasswordWrong = false
                             onEvent(LoginEvent.SetPassword(it))
                         },
                         modifier = Modifier
@@ -135,11 +149,12 @@ fun LoginScreen(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done,
                         ),
+                        isError = isPasswordWrong,
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                /*TODO: сделать нормальную валидацию*/
                                 onEvent(LoginEvent.LoginUser(
                                     onSuccessAction = {
+                                        Log.d("MyTag", "onSuccess called")
                                         (localContext as Activity).finish()
                                         localContext.startActivity(
                                             Intent(
@@ -148,19 +163,13 @@ fun LoginScreen(
                                             )
                                         )
                                     },
+                                    onFailureAction = {
+                                    },
                                     onEmptyPasswordAction = {
-                                        Toast.makeText(
-                                            localContext,
-                                            "Введите пароль",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        isPasswordWrong = true
                                     },
                                     onEmptyLoginAction = {
-                                        Toast.makeText(
-                                            localContext,
-                                            "Введите логин",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        isLoginWrong = true
                                     }
                                 ))
                                 keyboardController?.hide()
@@ -186,7 +195,6 @@ fun LoginScreen(
                     Spacer(modifier = Modifier.padding(6.dp))
                     Button(
                         onClick = {
-                            /*TODO: сделать нормальную валидацию*/
                             onEvent(LoginEvent.LoginUser(
                                 onSuccessAction = {
                                     (localContext as Activity).finish()
@@ -197,19 +205,13 @@ fun LoginScreen(
                                         )
                                     )
                                 },
+                                onFailureAction = {
+                                },
                                 onEmptyPasswordAction = {
-                                    Toast.makeText(
-                                        localContext,
-                                        "Введите пароль",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    isPasswordWrong = true
                                 },
                                 onEmptyLoginAction = {
-                                    Toast.makeText(
-                                        localContext,
-                                        "Введите логин",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    isLoginWrong = true
                                 }
                             ))
                             keyboardController?.hide()
