@@ -27,10 +27,10 @@
     <string name="hello">Здравствуйте!</string>
     <string name="help">Помощь</string>
     <string name="hide_password">Скрыть пароль</string>
-    <string name="login">Вход</string>
+    <string name="login">Логин</string>
     <string name="logo_description">Логотип</string>
-    <string name="motto">Биржа талантов - возможность получить любимую работу!</string>
-    <string name="my_resume">Моё резюме</string>
+    <string name="motto">Биржа талантов - возможность подобрать лучшего сотрудника!</string>
+    <string name="my_resume">Мои Вакансии</string>
     <string name="name">Имя</string>
     <string name="next">Далее</string>
     <string name="password">Пароль</string>
@@ -47,7 +47,7 @@
     <string name="sign_in">Войти</string>
     <string name="speciality">Специальность</string>
     <string name="student">Студент</string>
-    <string name="surname">Фамилия</string>
+    <string name="surname">Название компании</string>
     <style name="Theme.Skills_market" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/black</item>
     </style>
