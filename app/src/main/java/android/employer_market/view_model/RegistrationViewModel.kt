@@ -3,7 +3,7 @@ package android.employer_market.view_model
 import android.employer_market.app.DefaultApplication
 import android.employer_market.data.repository.RegistrationRepository
 import android.employer_market.network.SMFirebase
-import android.employer_market.network.models.EmployerModel
+import android.employer_market.network.models.CompanyModel
 import android.employer_market.view_model.event.RegistrationEvent
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -55,13 +55,12 @@ class RegViewModel(
             is RegistrationEvent.AddUser -> {
                 if (!_uiState.value.isLoginBlank && !_uiState.value.isPasswordBlank) {
                     db.addUser(
-                        EmployerModel(
+                        CompanyModel(
                             companyName = _uiState.value.companyname,
                             city = _uiState.value.city,
                             email = _uiState.value.email,
                             password = _uiState.value.password,
-
-                            ),
+                        ),
                         onSuccessAction = {
                             event.onSuccessAction()
                         },
@@ -69,15 +68,6 @@ class RegViewModel(
                             event.onFailureAction()
                         }
                     )
-//                    viewModelScope.launch{
-//                        val response = registrationRepository.register(
-//                            AuthRequest(
-//                                email = uiState.value.email,
-//                                password = uiState.value.password
-//                            )
-//                        )
-//                        Log.i(tag, response.isExecuted.toString())
-//                    }
                 } else if (!uiState.value.isLoginBlank) {
                     event.onEmptyLoginAction()
                 } else {
@@ -120,8 +110,6 @@ class RegViewModel(
                     )
                 }
             }
-
-
         }
     }
 

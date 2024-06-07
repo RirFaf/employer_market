@@ -1,8 +1,8 @@
 package android.employer_market.network.models
 
-data class EmployerModel(
+data class CompanyModel(
+    val id:String,
+    val userAuthData: UserAuthData,
     val companyName: String,
     val city: String,
-    val email: String,
-    val password: String,
 )

@@ -1,18 +1,18 @@
 package android.employer_market.network
 
-import android.employer_market.network.models.EmployerModel
+import android.employer_market.network.models.CompanyModel
 import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class SMFirebase() {
+object SMFirebase {
     private val tag = "FirebaseTag"
     private val auth = Firebase.auth
 
     fun addUser(
-        user: EmployerModel,
+        user: CompanyModel,
         onSuccessAction: () -> Unit,
         onFailureAction: () -> Unit,
     ) {

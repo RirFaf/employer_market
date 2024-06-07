@@ -48,9 +48,18 @@ fun NameAndGenderScreen(
                 label = stringResource(R.string.company_name),
                 lastField = false
             )
+            RegistrationTextField(
+                value = uiState.companyname,
+                onValueChange = {
+                    onEvent(RegistrationEvent.SetCity(it))
+                },
+                keyboardActions = KeyboardActions(),
+                label = "Город",
+                lastField = false
+            )
 
             Button(
-                onClick = { navController.navigate(Screen.CityCourseAndPhoneScreen.route) },
+                onClick = { navController.navigate(Screen.EmailAndPasswordScreen.route) },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
