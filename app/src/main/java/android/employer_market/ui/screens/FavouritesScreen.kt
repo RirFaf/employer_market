@@ -1,7 +1,7 @@
 package android.employer_market.ui.screens
 
 import android.employer_market.ui.navigation.Screen
-import android.employer_market.ui.screens.custom_composables.VacancyCard
+import android.employer_market.ui.screens.custom_composables.ResumeCard
 import android.employer_market.view_model.FavouritesUIState
 import android.employer_market.view_model.event.FavouritesEvent
 import androidx.compose.foundation.layout.Arrangement
@@ -70,32 +70,32 @@ fun FavouritesScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
                 contentPadding = PaddingValues(4.dp)
             ) {
-                itemsIndexed(
-                    state.favourites.vacancies
-                ) { _, item ->
-                    VacancyCard(
-                        vacancy = item,
-                        onClick = {
-                            navController.navigate(
-                                route = Screen.VacancyScreen.route +
-                                        "/${item.id}" +
-                                        "/${item.position}" +
-                                        "/${item.salary}" +
-                                        "/${item.companyName}" +
-                                        "/${item.edArea}" +
-                                        "/${item.formOfEmployment}" +
-                                        "/${item.requirements}" +
-                                        "/${item.location}" +
-                                        "/${if (item.about.isEmpty()) " " else item.about}"
-                            ) {
-                                launchSingleTop = false
-                                restoreState = true
-                            }
-                        },
-                        onRespond = {},
-                        onLike = {}
-                    )
-                }
+//                itemsIndexed(
+//                    state.favourites.vacancies
+//                ) { _, item ->
+//                    ResumeCard(
+//                        vacancy = item,
+//                        onClick = {
+//                            navController.navigate(
+//                                route = Screen.SelectedResumeScreen.route +
+//                                        "/${item.id}" +
+//                                        "/${item.position}" +
+//                                        "/${item.salary}" +
+//                                        "/${item.companyName}" +
+//                                        "/${item.edArea}" +
+//                                        "/${item.formOfEmployment}" +
+//                                        "/${item.requirements}" +
+//                                        "/${item.location}" +
+//                                        "/${if (item.about.isEmpty()) " " else item.about}"
+//                            ) {
+//                                launchSingleTop = false
+//                                restoreState = true
+//                            }
+//                        },
+//                        onRespond = {},
+//                        onLike = {}
+//                    )
+//                }
             }
         }
     }

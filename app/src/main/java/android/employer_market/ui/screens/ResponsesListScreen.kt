@@ -70,34 +70,34 @@ fun ResponsesListScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
                 contentPadding = PaddingValues(4.dp)
             ) {
-                itemsIndexed(
-                    state.responses.vacancies
-                ) { _, item ->
-                    ResponseCard(
-                        vacancy = item,
-                        onCardClick = {
-                            navController.navigate(
-                                route = Screen.VacancyScreen.route +
-                                        "/${item.id}" +
-                                        "/${item.position}" +
-                                        "/${item.salary}" +
-                                        "/${item.companyName}" +
-                                        "/${item.edArea}" +
-                                        "/${item.formOfEmployment}" +
-                                        "/${item.requirements}" +
-                                        "/${item.location}" +
-                                        "/${if (item.about.isEmpty()) " " else item.about}"
-                            ) {
-                                launchSingleTop = false
-                                restoreState = true
-                            }
-                        },
-                        onChatButtonClick = {},
-                        onDelete = {
-                            onEvent(ResponsesEvent.DeleteResponse(item))
-                        }
-                    )
-                }
+//                itemsIndexed(
+//                    state.responses.vacancies
+//                ) { _, item ->
+//                    ResponseCard(
+//                        vacancy = item,
+//                        onCardClick = {
+//                            navController.navigate(
+//                                route = Screen.SelectedResumeScreen.route +
+//                                        "/${item.id}" +
+//                                        "/${item.position}" +
+//                                        "/${item.salary}" +
+//                                        "/${item.companyName}" +
+//                                        "/${item.edArea}" +
+//                                        "/${item.formOfEmployment}" +
+//                                        "/${item.requirements}" +
+//                                        "/${item.location}" +
+//                                        "/${if (item.about.isEmpty()) " " else item.about}"
+//                            ) {
+//                                launchSingleTop = false
+//                                restoreState = true
+//                            }
+//                        },
+//                        onChatButtonClick = {},
+//                        onDelete = {
+//                            onEvent(ResponsesEvent.DeleteResponse(item))
+//                        }
+//                    )
+//                }
             }
         }
     }

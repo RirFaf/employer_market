@@ -74,7 +74,7 @@ fun LoginScreen(
                     Row(
                         modifier = Modifier
                             .clickable {
-                                navController.navigate(Screen.LogRegScreen.route){
+                                navController.navigate(Screen.LogRegScreen){
                                     popUpTo(navController.graph.findStartDestination().id) {
                                         saveState = true
                                     }

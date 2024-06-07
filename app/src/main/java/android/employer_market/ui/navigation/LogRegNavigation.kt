@@ -30,12 +30,11 @@ import androidx.navigation.compose.composable
 fun LogRegNavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.LogRegScreen.route,
+        startDestination = Screen.LogRegScreen,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
     ) {
-        composable(
-            route = Screen.LogRegScreen.route,
+        composable<Screen.LogRegScreen>(
             popEnterTransition = {
                 fadeIn(
                     animationSpec = tween(250, easing = LinearEasing),
@@ -75,8 +74,7 @@ fun LogRegNavigationGraph(navController: NavHostController) {
         ) {
             LogRegScreen(navController = navController)
         }
-        composable(
-            route = Screen.LoginScreen.route,
+        composable<Screen.LoginScreen>(
             enterTransition = {
                 slideIntoContainer(
                     animationSpec = tween(250, easing = EaseIn),
@@ -114,8 +112,7 @@ fun LogRegNavigationGraph(navController: NavHostController) {
                 state = state
             )
         }
-        composable(
-            route = Screen.RegistrationScreen.route,
+        composable<Screen.RegistrationScreen>(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(250, easing = LinearEasing),
@@ -166,10 +163,9 @@ fun RegGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.CompanyInfo .route,
+        startDestination = Screen.CompanyInfoScreen,
     ) {
-        composable(
-            route = Screen.EmailAndPasswordScreen.route,
+        composable<Screen.EmailAndPasswordScreen>(
             popEnterTransition = {
                 fadeIn(
                     animationSpec = tween(250, easing = LinearEasing),
@@ -195,8 +191,7 @@ fun RegGraph(
                 uiState = state
             )
         }
-        composable(
-            route = Screen.CompanyInfo.route,
+        composable<Screen.CompanyInfoScreen>(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(250, easing = LinearEasing),

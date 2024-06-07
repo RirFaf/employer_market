@@ -1,0 +1,9 @@
+package android.employer_market.data.constants
+
+object ResponseStatus {
+    const val APPROVED = "Одобрено"
+    const val DENIED = "Отклонено"
+    const val SENT = "Отправлено"
+    const val INVITE = "Приглашение"
+    const val EMPTY = ""
+}

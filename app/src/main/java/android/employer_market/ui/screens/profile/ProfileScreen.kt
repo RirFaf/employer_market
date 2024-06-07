@@ -99,7 +99,7 @@ fun ProfileScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate(Screen.ProfileRedactorScreen.route) },
+                onClick = { navController.navigate(Screen.ProfileRedactorScreen) },
                 shape = CircleShape
             ) {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit profile")
@@ -133,7 +133,7 @@ fun ProfileScreen(
                     .fillMaxWidth()
                     .padding(10.dp),
                 onClick = {
-                    navController.navigate(Screen.ResumeScreen.route)
+                    navController.navigate(Screen.VacancyScreen)
                 },
             ) {
                 Text(

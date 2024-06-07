@@ -83,7 +83,7 @@ fun CompanyInfoScreen(
                             uiState.companyName.isNotBlank() &&
                             uiState.city.isNotBlank()
                         ) {
-                            navController.navigate(Screen.EmailAndPasswordScreen.route)
+                            navController.navigate(Screen.EmailAndPasswordScreen)
                         }
                         if (uiState.city.isBlank()) {
                             isCityWrong = true
@@ -103,7 +103,7 @@ fun CompanyInfoScreen(
                         uiState.companyName.isNotBlank() &&
                         uiState.city.isNotBlank()
                     ) {
-                        navController.navigate(Screen.EmailAndPasswordScreen.route)
+                        navController.navigate(Screen.EmailAndPasswordScreen)
                     }
                     if (uiState.city.isBlank()) {
                         isCityWrong = true

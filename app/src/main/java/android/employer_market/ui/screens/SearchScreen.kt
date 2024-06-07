@@ -2,9 +2,10 @@ package android.employer_market.ui.screens
 
 import android.employer_market.R
 import android.employer_market.ui.navigation.Screen
-import android.employer_market.ui.screens.custom_composables.VacancyCard
+import android.employer_market.ui.screens.custom_composables.ResumeCard
 import android.employer_market.view_model.SearchUIState
 import android.employer_market.view_model.event.SearchEvent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -117,22 +118,30 @@ fun SearchScreen(
                 contentPadding = PaddingValues(4.dp)
             ) {
                 itemsIndexed(
-                    state.vacancies.vacancies
+                    state.resumes
                 ) { _, item ->
-                    VacancyCard(
-                        vacancy = item,
+                    ResumeCard(
+                        resume = item,
                         onClick = {
                             navController.navigate(
-                                route = Screen.VacancyScreen.route +
-                                        "/${item.id}" +
-                                        "/${item.position}" +
-                                        "/${item.salary}" +
-                                        "/${item.companyName}" +
-                                        "/${item.edArea}" +
-                                        "/${item.formOfEmployment}" +
-                                        "/${item.requirements}" +
-                                        "/${item.location}" +
-                                        "/${item.about.ifEmpty { " " }}"
+                                route = Screen.SelectedResumeScreen(
+                                    id = item.id,
+                                    studentId = item.studentId,
+                                    salary = item.salary,
+                                    keySkills = item.keySkills,
+                                    secondName = item.secondName,
+                                    firstName = item.firstName,
+                                    patronymicName = item.patronymicName,
+                                    birthDate = item.birthDate,
+                                    university = item.university,
+                                    institute = item.institute,
+                                    course = item.course,
+                                    aboutMe = item.aboutMe,
+                                    gender = item.gender,
+                                    city = item.city,
+                                    direction = item.direction,
+                                    liked = item.liked,
+                                )
                             ) {
                                 launchSingleTop = true
                                 restoreState = true

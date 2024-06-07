@@ -1,8 +1,8 @@
 package android.employer_market.app
 
 import android.app.Application
-import android.employer_market.data.RepositoryContainer
-import android.employer_market.data.DefaultRepositoryContainer
+import android.employer_market.data.repository.RepositoryContainer
+import android.employer_market.data.repository.DefaultRepositoryContainer
 import android.employer_market.network.SessionManager
 
 class DefaultApplication : Application() {

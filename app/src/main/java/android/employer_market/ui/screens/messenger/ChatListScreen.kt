@@ -85,7 +85,7 @@ private fun ChatCard(navController: NavController) {
     Row(
         modifier = Modifier
             .clickable {
-                navController.navigate(Screen.MessengerScreen.route) {
+                navController.navigate(Screen.MessengerScreen) {
                     launchSingleTop = false
                     restoreState = true
                 }

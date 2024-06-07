@@ -1,7 +1,7 @@
 package android.employer_market.view_model
 
 import android.employer_market.app.DefaultApplication
-import android.employer_market.network.models.VacanciesModel
+import android.employer_market.network.models.ResumeModel
 import android.employer_market.network.models.VacancyModel
 import android.employer_market.view_model.event.ResponsesEvent
 import android.util.Log
@@ -15,8 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 sealed interface ResponsesUIState {
     data class Success(
-        val responses: VacanciesModel,
-        val selectedResponse: VacancyModel
+        val responses: List<ResumeModel> = listOf(),
     ) : ResponsesUIState
 
     data object Error : ResponsesUIState
@@ -26,25 +25,9 @@ sealed interface ResponsesUIState {
 class ResponsesViewModel(
     //responsesRepository: ResponsesRepository
 ) : ViewModel() {
-    private val vacancies = VacanciesModel(
-        listOf(
-            VacancyModel(
-                id = 0,
-                position = "IOS-Разработчик",
-                salary = 80000,
-                companyName = "Александр Кокошкин",
-                edArea = "IT-технологии",
-                formOfEmployment = "Полная",
-                requirements = "Диплом о законченом высшем образовании",
-                location = "Казань",
-                about = "Хороший и ответственный сотрудник",
-            ),
-
-        )
-    )
     private val tag = "VMTAG"
     private val _uiState =
-        MutableStateFlow(ResponsesUIState.Success(vacancies, vacancies.vacancies[0]))
+        MutableStateFlow(ResponsesUIState.Success())
     val uiState: StateFlow<ResponsesUIState.Success> = _uiState.asStateFlow()
 
     init {
