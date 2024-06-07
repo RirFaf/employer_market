@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace 'android.skills_market'
+    namespace 'android.employer_market'
     compileSdk 34
 
     defaultConfig {
-        applicationId "android.skills_market"
+        applicationId "android.employer_market"
         minSdk 21
         targetSdk 33
         versionCode 1

@@ -7,6 +7,7 @@ import android.employer_market.activities.AppActivity
 import android.employer_market.ui.theme.Typography
 import android.employer_market.view_model.LoginUIState
 import android.employer_market.view_model.event.LoginEvent
+import android.skills_market.R
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -110,7 +111,7 @@ fun LoginScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth(),
-                        label = { Text(text = stringResource(id = android.employer_market.R.string.login)) },
+                        label = { Text(text = stringResource(id = R.string.login)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             autoCorrect = false,
