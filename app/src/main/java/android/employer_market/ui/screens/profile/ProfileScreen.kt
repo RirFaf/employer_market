@@ -38,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,7 +49,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun ProfileScreen(
     navController: NavController,
@@ -62,17 +62,17 @@ fun ProfileScreen(
                 title = { Text(text = "Профиль") },
                 actions = {
                     val database = SMFirebase
-                    IconButton(
-                        onClick = {
-                            Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
-                                .show()
-                        },
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.notifications_none),
-                            contentDescription = "Show menu",
-                        )
-                    }
+//                    IconButton(
+//                        onClick = {
+//                            Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
+//                                .show()
+//                        },
+//                    ) {
+//                        Icon(
+//                            painter = painterResource(id = R.drawable.notifications_none),
+//                            contentDescription = "Show menu",
+//                        )
+//                    }
                     IconButton(
                         onClick = {
                             //TODO засунусть в обработчик событий
@@ -124,8 +124,7 @@ fun ProfileScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Column(modifier = Modifier.padding(8.dp)) {
-                    Text(text = "Яндекс Крауд", fontSize = 25.sp)
-                    Text(text = "+7843123567", fontSize = 18.sp)
+                    Text(text = state.company.name, fontSize = 26.sp)
                 }
             }
             Button(
@@ -154,18 +153,25 @@ fun ProfileScreen(
 
             }
             Text(
-                text = "«Яндекс Крауд» осуществляет деятельность по обработке данных, также ее работа связана с использованием вычислительной техники и ИТ, с исследованием конъюнктуры рынка и изучением общественного мнения.",
+                text = state.company.about.ifBlank { "Не указано" },
                 fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
+                fontSize = 18.sp,
+                color = if (state.company.profArea.isNotBlank()) Color.Unspecified else Color.Gray
             )
             Spacer(modifier = Modifier.height(16.dp))
-            CustomText(heading = "На рынке ", content = "6 лет")
+            CustomText(
+                heading = "На рынке ", content = state.company.age.ifBlank { "Не указано" },
+                color = if (state.company.age.isNotBlank()) Color.Unspecified else Color.Gray
+            )
             Spacer(modifier = Modifier.height(16.dp))
             CustomText(heading = "Количество открытых вакансий", content = "4")
             Spacer(modifier = Modifier.height(16.dp))
-            CustomText(heading = "Сферы деятельности", content = "IT-сфера")
+            CustomText(
+                heading = "Сферы деятельности",
+                content = state.company.profArea.ifBlank { "Не указано" },
+                color = if (state.company.profArea.isNotBlank()) Color.Unspecified else Color.Gray
+            )
             Spacer(modifier = Modifier.height(16.dp))
-
         }
     }
 }

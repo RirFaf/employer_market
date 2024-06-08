@@ -37,7 +37,10 @@ class FirebaseRegistrationRepository() : RegistrationRepository {
                             userAuthData = UserAuthData(login, currentUser.uid),
                             name = companyName,
                             city = city,
-                            id = currentUser.uid
+                            id = currentUser.uid,
+                            age = " ",
+                            profArea = " ",
+                            about = " "
                         )
                     )
                 }

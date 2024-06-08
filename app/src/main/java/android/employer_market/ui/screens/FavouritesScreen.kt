@@ -50,7 +50,7 @@ fun FavouritesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Избранное") },
+                title = { Text(text = "Лучшее") },
                 actions = {
 //                    IconButton(
 //                        onClick = {}

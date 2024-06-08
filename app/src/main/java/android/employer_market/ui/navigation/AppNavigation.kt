@@ -9,6 +9,7 @@ import android.employer_market.ui.screens.profile.ProfileScreen
 import android.employer_market.ui.screens.ResponsesListScreen
 import android.employer_market.ui.screens.SearchScreen
 import android.employer_market.ui.screens.SelectedResumeScreen
+import android.employer_market.ui.screens.profile.ProfileRedactorScreen
 import android.employer_market.ui.screens.vacancy.ResumeRedactorScreen
 import android.employer_market.ui.screens.vacancy.VacancyScreen
 import android.employer_market.view_model.FavouritesViewModel
@@ -32,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import androidx.navigation.toRoute
 
 
@@ -72,7 +74,7 @@ fun NavigationGraph(navController: NavHostController) {
             exitTransition = { customExitTransition },
             popEnterTransition = { customEnterTransition },
             popExitTransition = { customExitTransition },
-        ) {entry->
+        ) { entry ->
             val args = entry.toRoute<Screen.SelectedResumeScreen>()
 
             SelectedResumeScreen(
@@ -154,7 +156,8 @@ fun NavigationGraph(navController: NavHostController) {
             popEnterTransition = { customEnterTransition },
             popExitTransition = { customExitTransition },
         ) {
-            val responsesViewModel = viewModel<ResponsesViewModel>(factory = ResponsesViewModel.Factory)
+            val responsesViewModel =
+                viewModel<ResponsesViewModel>(factory = ResponsesViewModel.Factory)
             val state by responsesViewModel.uiState.collectAsStateWithLifecycle()
             ResponsesListScreen(
                 navController = navController,
@@ -163,35 +166,42 @@ fun NavigationGraph(navController: NavHostController) {
             )
         }
 
-        composable<Screen.ProfileScreen>(
-            enterTransition = { customEnterTransition },
-            exitTransition = { customExitTransition },
-            popEnterTransition = { customEnterTransition },
-            popExitTransition = { customExitTransition },
-        ) {entry ->
-            val profileViewModel = entry.sharedViewModel<ProfileViewModel>(
-                factory = ProfileViewModel.Factory,
-                navController = navController
-            )
-            val state by profileViewModel.uiState.collectAsStateWithLifecycle()
-            ProfileScreen(
-                navController = navController,
-                state = state,
-                onEvent = profileViewModel::onEvent
-            )
-        }
+        navigation<Screen.Profile>(startDestination = Screen.ProfileScreen) {
+            composable<Screen.ProfileScreen>(
+                enterTransition = { customEnterTransition },
+                exitTransition = { customExitTransition },
+                popEnterTransition = { customEnterTransition },
+                popExitTransition = { customExitTransition },
+            ) { entry ->
+                val profileViewModel = entry.sharedViewModel<ProfileViewModel>(
+                    factory = ProfileViewModel.Factory,
+                    navController = navController
+                )
+                val state by profileViewModel.uiState.collectAsStateWithLifecycle()
+                ProfileScreen(
+                    navController = navController,
+                    state = state,
+                    onEvent = profileViewModel::onEvent
+                )
+            }
 
-        composable<Screen.ProfileRedactorScreen>(
-            enterTransition = { customEnterTransition },
-            exitTransition = { customExitTransition },
-            popEnterTransition = { customEnterTransition },
-            popExitTransition = { customExitTransition },
-        ) { entry ->
-            val profileViewModel = entry.sharedViewModel<ProfileViewModel>(
-                factory = ProfileViewModel.Factory,
-                navController = navController
-            )
-            val state by profileViewModel.uiState.collectAsStateWithLifecycle()
+            composable<Screen.ProfileRedactorScreen>(
+                enterTransition = { customEnterTransition },
+                exitTransition = { customExitTransition },
+                popEnterTransition = { customEnterTransition },
+                popExitTransition = { customExitTransition },
+            ) { entry ->
+                val profileViewModel = entry.sharedViewModel<ProfileViewModel>(
+                    factory = ProfileViewModel.Factory,
+                    navController = navController
+                )
+                val state by profileViewModel.uiState.collectAsStateWithLifecycle()
+                ProfileRedactorScreen(
+                    navController = navController,
+                    state = state,
+                    onEvent = profileViewModel::onEvent
+                )
+            }
         }
 
         composable<Screen.VacancyScreen>(
