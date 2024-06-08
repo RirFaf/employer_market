@@ -1,6 +1,7 @@
 package android.employer_market.ui.screens
 
 import android.employer_market.R
+import android.employer_market.network.models.ResumeFilter
 import android.employer_market.network.models.VacancyModel
 import android.employer_market.ui.navigation.Screen
 import android.employer_market.ui.navigation.extensions.noRippleClickable
@@ -36,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -52,7 +54,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
@@ -64,9 +68,6 @@ fun SearchScreen(
     onEvent: (SearchEvent) -> Unit
 ) {
     val localContext = LocalContext.current
-    var showVacancies by remember {
-        mutableStateOf(false)
-    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -110,8 +111,7 @@ fun SearchScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
-                                .show()
+                            onEvent(SearchEvent.ShowFilterDialog)
                         },
                         modifier = Modifier
                     ) {
@@ -168,7 +168,7 @@ fun SearchScreen(
                             }
                         },
                         onInvite = {
-                            showVacancies = true
+                            onEvent(SearchEvent.ShowVacancies)
                             onEvent(SearchEvent.SetChosenStudentId(input = item.studentId))
                             onEvent(SearchEvent.GetMyVacancies)
                         },
@@ -178,7 +178,7 @@ fun SearchScreen(
                     )
                 }
             }
-            if (showVacancies) {
+            if (state.showVacancies) {
                 VacancyChoiceCard(
                     vacancies = state.myVacancies,
                     onChoice = { vacancy ->
@@ -190,9 +190,151 @@ fun SearchScreen(
                         )
                     },
                     onDismiss = {
-                        showVacancies = false
+                        onEvent(SearchEvent.ShowVacancies)
                     }
                 )
+            }
+            if (state.showFilterDialog) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xCD000000))
+                        .noRippleClickable {
+                            onEvent(SearchEvent.ShowFilterDialog)
+                        },
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .noRippleClickable { }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp, horizontal = 8.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = "Выберите фильтр")
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp, horizontal = 8.dp),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = state.currentFilter == ResumeFilter.None,
+                                onClick = {
+                                    onEvent(
+                                        SearchEvent.SetResumesFilter(
+                                            ResumeFilter.None
+                                        )
+                                    )
+                                }
+                            )
+                            Text(
+                                text = "Нет",
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp, horizontal = 8.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = state.currentFilter != ResumeFilter.None,
+                                    onClick = {
+                                        onEvent(
+                                            SearchEvent.SetResumesFilter(
+                                                ResumeFilter.BySalary()
+                                            )
+                                        )
+                                    }
+                                )
+                                Text(
+                                    text = "Ожидаемая зарплата",
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp, horizontal = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                OutlinedTextField(
+                                    value = state.from.toString(),
+                                    onValueChange = {
+                                        onEvent(
+                                            SearchEvent.SetFrom(it)
+                                        )
+                                    },
+                                    label = {
+                                        Text(text = "От")
+                                    },
+                                    modifier = Modifier.fillMaxWidth(0.4f),
+                                    enabled = state.currentFilter != ResumeFilter.None,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Number
+                                    )
+                                )
+                                OutlinedTextField(
+                                    value = state.to.toString(),
+                                    onValueChange = {
+                                        onEvent(
+                                            SearchEvent.SetTo(it)
+                                        )
+                                    },
+                                    label = {
+                                        Text(text = "До")
+                                    },
+                                    modifier = Modifier.fillMaxWidth(0.8f),
+                                    enabled = state.currentFilter != ResumeFilter.None,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Number
+                                    )
+                                )
+                            }
+                        }
+                        Button(
+                            onClick = {
+                                onEvent(
+                                    if (state.currentFilter != ResumeFilter.None) {
+                                        SearchEvent.SetResumesFilter(
+                                            ResumeFilter.BySalary(
+                                                from = state.from,
+                                                to = state.to
+                                            )
+                                        )
+                                    } else {
+                                        SearchEvent.SetResumesFilter(
+                                            ResumeFilter.None
+                                        )
+                                    }
+                                )
+                                onEvent(
+                                    SearchEvent.GetResumes
+                                )
+                                onEvent(SearchEvent.ShowFilterDialog)
+                            },
+                            modifier = Modifier
+                                .padding(vertical = 8.dp, horizontal = 16.dp)
+                        ) {
+                            Text(text = "Готово")
+                        }
+                    }
+                }
             }
         }
     }

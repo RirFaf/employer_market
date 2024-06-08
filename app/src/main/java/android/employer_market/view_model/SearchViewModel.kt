@@ -25,6 +25,7 @@ sealed interface SearchUIState {
         val searchInput: String = "",
         val currentFilter: ResumeFilter = ResumeFilter.None,
         val showFilterDialog: Boolean = false,
+        val showVacancies: Boolean = false,
         val from: Int = 0,
         val to: Int = 0
     ) : SearchUIState
@@ -58,7 +59,6 @@ class SearchViewModel(
                                 resumes = resumes
                             )
                         }
-                        Log.d("MyTag", _uiState.value.resumes.size.toString())
                     },
                     onFailureAction = {}
                 )
@@ -76,8 +76,35 @@ class SearchViewModel(
                 )
             }
 
+            is SearchEvent.SetResumesFilter -> {
+                _uiState.update {
+                    it.copy(
+                        currentFilter = event.filter
+                    )
+                }
+            }
             is SearchEvent.SetFrom -> {
-//                TODO()
+                _uiState.update {
+                    it.copy(
+                        from = if (event.input != "") {
+                            event.input.toInt()
+                        } else {
+                            0
+                        }
+                    )
+                }
+            }
+
+            is SearchEvent.SetTo -> {
+                _uiState.update {
+                    it.copy(
+                        to = if (event.input != "") {
+                            event.input.toInt()
+                        } else {
+                            0
+                        }
+                    )
+                }
             }
 
             is SearchEvent.SetSearchInput -> {
@@ -88,16 +115,21 @@ class SearchViewModel(
                 }
             }
 
-            is SearchEvent.SetTo -> {
-//                TODO()
-            }
-
-            is SearchEvent.SetResumesFilter -> {
-//                TODO()
-            }
 
             is SearchEvent.ShowFilterDialog -> {
-//                TODO()
+                _uiState.update {
+                    it.copy(
+                        showFilterDialog = !_uiState.value.showFilterDialog
+                    )
+                }
+            }
+
+            is SearchEvent.ShowVacancies -> {
+                _uiState.update {
+                    it.copy(
+                        showVacancies = !_uiState.value.showVacancies
+                    )
+                }
             }
 
             SearchEvent.GetMyVacancies -> {
