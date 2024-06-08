@@ -4,6 +4,7 @@ import android.employer_market.app.DefaultApplication
 import android.employer_market.data.repository.SearchRepository
 import android.employer_market.network.models.ResumeFilter
 import android.employer_market.network.models.ResumeModel
+import android.employer_market.network.models.VacancyModel
 import android.employer_market.view_model.event.SearchEvent
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,8 @@ import kotlinx.coroutines.flow.update
 sealed interface SearchUIState {
     data class Success(
         val resumes: List<ResumeModel> = listOf(),
+        val myVacancies: List<VacancyModel> = listOf(),
+        val chosenStudentId: String = "",
         val searchInput: String = "",
         val currentFilter: ResumeFilter = ResumeFilter.None,
         val showFilterDialog: Boolean = false,
@@ -62,11 +65,15 @@ class SearchViewModel(
             }
 
             is SearchEvent.ChangeLiked -> {
-//                TODO()
+                searchRepository.changeLiked(resumeId = event.resumeId, {})
             }
 
             is SearchEvent.Invite -> {
-//                TODO()
+                searchRepository.invite(
+                    vacancyId = event.vacancyId,
+                    studentId = event.studentId,
+                    onFailureAction = {}
+                )
             }
 
             is SearchEvent.SetFrom -> {
@@ -74,7 +81,11 @@ class SearchViewModel(
             }
 
             is SearchEvent.SetSearchInput -> {
-//                TODO()
+                _uiState.update {
+                    it.copy(
+                        searchInput = event.input
+                    )
+                }
             }
 
             is SearchEvent.SetTo -> {
@@ -87,6 +98,27 @@ class SearchViewModel(
 
             is SearchEvent.ShowFilterDialog -> {
 //                TODO()
+            }
+
+            SearchEvent.GetMyVacancies -> {
+                searchRepository.getMyVacancies(
+                    onSuccessAction = { vacancies ->
+                        _uiState.update {
+                            it.copy(
+                                myVacancies = vacancies
+                            )
+                        }
+                    },
+                    onFailureAction = {}
+                )
+            }
+
+            is SearchEvent.SetChosenStudentId -> {
+                _uiState.update {
+                    it.copy(
+                        chosenStudentId = event.input
+                    )
+                }
             }
         }
     }

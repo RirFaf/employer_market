@@ -10,5 +10,7 @@ sealed interface SearchEvent {
     data class SetTo(val input: String) : SearchEvent
     data object ShowFilterDialog : SearchEvent
     data class ChangeLiked(val resumeId: String) : SearchEvent
-    data class Invite(val resumeId: String, val studentId:String) : SearchEvent
+    data class Invite(val vacancyId: String, val studentId: String) : SearchEvent
+    data object GetMyVacancies : SearchEvent
+    data class SetChosenStudentId(val input: String) : SearchEvent
 }

@@ -2,7 +2,6 @@ package android.employer_market.ui.screens.custom_composables
 
 import android.employer_market.R
 import android.employer_market.network.models.ResumeModel
-import android.employer_market.network.models.VacancyModel
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -37,7 +36,7 @@ import androidx.compose.ui.unit.sp
 fun ResumeCard(
     resume: ResumeModel,
     onClick: () -> Unit,
-    onRespond:()->Unit,
+    onInvite:()->Unit,
     onLike:()->Unit,
     modifier: Modifier = Modifier
 ) {
@@ -90,17 +89,14 @@ fun ResumeCard(
             ) {
                 Button(
                     onClick = {
-                        Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
-                            .show()
-                        enabled = false
+                        onInvite()
                     },
                 ) {
-                    Text(text = stringResource(id = R.string.respond))
+                    Text(text =  "Пригласить")
                 }
                 IconButton(
                     onClick = {
-                        Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
-                            .show()
+                        onLike()
                         liked = !liked
                     }
                 ) {

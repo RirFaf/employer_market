@@ -71,12 +71,12 @@ fun ResponseCard(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.padding(2.dp))
-            Text(
-                text = vacancy.companyName,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                fontSize = 14.sp
-            )
+//            Text(
+//                text = vacancy.companyName,
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                fontSize = 14.sp
+//            )
             Spacer(modifier = Modifier.padding(4.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),

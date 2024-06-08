@@ -1,23 +1,34 @@
 package android.employer_market.ui.screens
 
 import android.employer_market.R
+import android.employer_market.network.models.VacancyModel
 import android.employer_market.ui.navigation.Screen
+import android.employer_market.ui.navigation.extensions.noRippleClickable
 import android.employer_market.ui.screens.custom_composables.ResumeCard
 import android.employer_market.view_model.SearchUIState
 import android.employer_market.view_model.event.SearchEvent
-import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,10 +43,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -48,21 +63,37 @@ fun SearchScreen(
     onEvent: (SearchEvent) -> Unit
 ) {
     val localContext = LocalContext.current
+    var showVacancies by remember {
+        mutableStateOf(false)
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = {
-                    var text by remember { mutableStateOf(TextFieldValue("")) }
                     OutlinedTextField(
-                        value = text,
-                        onValueChange = { text = it },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = stringResource(id = R.string.search),
-                            )
+                        value = state.searchInput,
+                        onValueChange = { onEvent(SearchEvent.SetSearchInput(it)) },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = { onEvent(SearchEvent.GetResumes) }
+                            ){
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = stringResource(id = R.string.search),
+                                )
+                            }
                         },
+                        keyboardOptions = KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Words,
+                            autoCorrectEnabled = false,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                onEvent(SearchEvent.GetResumes)
+                            }
+                        ),
                         placeholder = {
                             Text(
                                 text = stringResource(id = R.string.search),
@@ -88,32 +119,20 @@ fun SearchScreen(
                             contentDescription = "filter",
                         )
                     }
-                    IconButton(
-                        onClick = {
-                            Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
-                                .show()
-                        },
-                        modifier = Modifier
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.sort),
-                            contentDescription = "sort",
-                        )
-                    }
                 },
                 modifier = Modifier.padding(vertical = 8.dp),
             )
         },
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 10.dp)
                 .padding(innerPadding)
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxSize()
+                    .padding(horizontal = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp),
                 contentPadding = PaddingValues(4.dp)
             ) {
@@ -147,9 +166,85 @@ fun SearchScreen(
                                 restoreState = true
                             }
                         },
-                        onRespond = {},
-                        onLike = {}
+                        onInvite = {
+                            showVacancies = true
+                            onEvent(SearchEvent.SetChosenStudentId(input = item.studentId))
+                            onEvent(SearchEvent.GetMyVacancies)
+                        },
+                        onLike = {
+                            onEvent(SearchEvent.ChangeLiked(resumeId = item.id))
+                        }
                     )
+                }
+            }
+            if (showVacancies) {
+                VacancyChoiceCard(
+                    vacancies = state.myVacancies,
+                    onChoice = { vacancy ->
+                        onEvent(
+                            SearchEvent.Invite(
+                                vacancyId = vacancy.id,
+                                studentId = state.chosenStudentId
+                            )
+                        )
+                    },
+                    onDismiss = {
+                        showVacancies = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun VacancyChoiceCard(
+    vacancies: List<VacancyModel>,
+    onChoice: (VacancyModel) -> Unit,
+    onDismiss: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .noRippleClickable { onDismiss() }
+            .background(Color(0xCD000000))
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+                .noRippleClickable { }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp, end = 4.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = "cancel choice",
+                    modifier = Modifier.noRippleClickable { onDismiss() }
+                )
+            }
+            LazyColumn {
+                itemsIndexed(vacancies) { _, vacancy ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                    ) {
+                        Text(text = vacancy.position)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(text = vacancy.salary.toString())
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(text = vacancy.edArea)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Button(onClick = { onChoice(vacancy) }) {
+                            Text(text = "Выбрать")
+                        }
+                    }
                 }
             }
         }
