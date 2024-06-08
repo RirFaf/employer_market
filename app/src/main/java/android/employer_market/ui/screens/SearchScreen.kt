@@ -33,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -77,7 +78,7 @@ fun SearchScreen(
                         trailingIcon = {
                             IconButton(
                                 onClick = { onEvent(SearchEvent.GetResumes) }
-                            ){
+                            ) {
                                 Icon(
                                     imageVector = Icons.Default.Search,
                                     contentDescription = stringResource(id = R.string.search),
@@ -212,38 +213,87 @@ private fun VacancyChoiceCard(
         Card(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp)
+                .padding(vertical = 12.dp, horizontal = 8.dp)
                 .noRippleClickable { }
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp, end = 4.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Clear,
-                    contentDescription = "cancel choice",
-                    modifier = Modifier.noRippleClickable { onDismiss() }
-                )
-            }
-            LazyColumn {
-                itemsIndexed(vacancies) { _, vacancy ->
-                    Card(
+            if (vacancies.isNotEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, end = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Выберите вакансию для приглашения")
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "cancel choice",
+                            modifier = Modifier.noRippleClickable { onDismiss() }
+                        )
+                    }
+                }
+                LazyColumn {
+                    itemsIndexed(vacancies) { _, vacancy ->
+                        OutlinedCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(6.dp)
+                            ) {
+                                Text(text = vacancy.position)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(text = vacancy.salary.toString())
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(text = vacancy.edArea)
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Button(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    onClick = { onChoice(vacancy) }
+                                ) {
+                                    Text(text = "Выбрать")
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(4.dp)
+                            .padding(top = 8.dp, end = 8.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(text = vacancy.position)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = vacancy.salary.toString())
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = vacancy.edArea)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Button(onClick = { onChoice(vacancy) }) {
-                            Text(text = "Выбрать")
+                        Text(text = "Выберите вакансию для приглашения")
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "cancel choice",
+                                modifier = Modifier.noRippleClickable { onDismiss() }
+                            )
                         }
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "У вас не добавлено ни одной вакансии")
                     }
                 }
             }
