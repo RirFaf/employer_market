@@ -5,6 +5,7 @@ import android.employer_market.data.repository.SearchRepository
 import android.employer_market.network.models.ResumeFilter
 import android.employer_market.network.models.ResumeModel
 import android.employer_market.network.models.VacancyModel
+import android.employer_market.view_model.event.FavouritesEvent
 import android.employer_market.view_model.event.SearchEvent
 import android.util.Log
 import androidx.lifecycle.ViewModel

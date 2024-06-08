@@ -7,6 +7,7 @@ import android.employer_market.ui.navigation.Screen
 import android.employer_market.ui.navigation.extensions.noRippleClickable
 import android.employer_market.ui.screens.custom_composables.ResumeCard
 import android.employer_market.view_model.SearchUIState
+import android.employer_market.view_model.event.FavouritesEvent
 import android.employer_market.view_model.event.SearchEvent
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -188,6 +189,7 @@ fun SearchScreen(
                                 studentId = state.chosenStudentId
                             )
                         )
+                        onEvent(SearchEvent.ShowVacancies)
                     },
                     onDismiss = {
                         onEvent(SearchEvent.ShowVacancies)

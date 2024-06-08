@@ -32,12 +32,10 @@ interface SearchRepository {
     fun getMyVacancies(
         onSuccessAction: (List<VacancyModel>) -> Unit,
         onFailureAction: () -> Unit
-    ) {
-    }
+    )
 }
 
 class FirebaseSearchRepository() : SearchRepository {
-
     override fun getMyVacancies(
         onSuccessAction: (List<VacancyModel>) -> Unit,
         onFailureAction: () -> Unit
@@ -99,7 +97,6 @@ class FirebaseSearchRepository() : SearchRepository {
                 searchRef
                     .get()
                     .addOnSuccessListener { documents ->
-                        Log.d("MyTag", "size = ${documents.size()}")
                         for (p1Resume in partOneResumes) {
                             docLoop@ for (doc in documents) {
                                 if (doc.data["id"] == p1Resume.studentId) {
