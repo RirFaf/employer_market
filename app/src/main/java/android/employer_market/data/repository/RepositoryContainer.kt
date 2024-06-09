@@ -6,6 +6,7 @@ interface RepositoryContainer {
     val searchRepository: SearchRepository
     val favouritesRepository: FavouritesRepository
     val profileRepository: ProfileRepository
+    val vacancyRepository: VacancyRepository
 }
 
 class DefaultRepositoryContainer : RepositoryContainer {
@@ -23,5 +24,8 @@ class DefaultRepositoryContainer : RepositoryContainer {
     }
     override val profileRepository: ProfileRepository by lazy {
         FirebaseProfileRepository()
+    }
+    override val vacancyRepository: VacancyRepository by lazy {
+        FirebaseVacancyRepository()
     }
 }

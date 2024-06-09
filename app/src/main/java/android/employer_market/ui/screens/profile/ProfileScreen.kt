@@ -132,7 +132,7 @@ fun ProfileScreen(
                     .fillMaxWidth()
                     .padding(10.dp),
                 onClick = {
-                    navController.navigate(Screen.VacancyScreen)
+                    navController.navigate(Screen.VacanciesListScreen)
                 },
             ) {
                 Text(

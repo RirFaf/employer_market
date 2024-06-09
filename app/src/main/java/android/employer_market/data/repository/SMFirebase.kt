@@ -19,7 +19,6 @@ object SMFirebase {
         onFailureAction: () -> Unit
     ) {
         val vacancies = ArrayList<VacancyModel>()
-
         com.google.firebase.Firebase.firestore.collection("vacancy")
             .whereEqualTo("companyId", com.google.firebase.Firebase.auth.currentUser!!.uid)
             .get()
@@ -27,13 +26,13 @@ object SMFirebase {
                 for (doc in documents) {
                     vacancies.add(
                         VacancyModel(
-                            id = doc.data["id"].toString(),
+                            id = doc.id,
                             edArea = doc.data["edArea"].toString(),
                             formOfEmployment = doc.data["formOfEmployment"].toString(),
                             location = doc.data["location"].toString(),
                             position = doc.data["position"].toString(),
                             requirements = doc.data["requirements"].toString(),
-                            salary = doc.data["salary"].toString().toInt(),
+                            salary = doc.data["salary"].toString().ifBlank { "0" }.toInt(),
                             about = doc.data["about"].toString()
                         )
                     )
@@ -86,7 +85,8 @@ object SMFirebase {
         onFailureAction: () -> Unit
     ) {
         val likesRef =
-            com.google.firebase.Firebase.database.getReference("companyLikes").child(com.google.firebase.Firebase.auth.currentUser!!.uid)
+            com.google.firebase.Firebase.database.getReference("companyLikes")
+                .child(com.google.firebase.Firebase.auth.currentUser!!.uid)
         var alreadyAdded = false
         likesRef
             .get()

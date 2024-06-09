@@ -56,8 +56,6 @@ sealed class Screen() {
     data object ProfileRedactorScreen : Screen()
     /***Resume***/
     @Serializable
-    data object VacancyScreen : Screen()
-    @Serializable
     data object VacancyRedactorScreen : Screen()
     @Serializable
     data object VacanciesListScreen : Screen()

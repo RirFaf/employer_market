@@ -10,15 +10,14 @@ import android.employer_market.ui.screens.ResponsesListScreen
 import android.employer_market.ui.screens.SearchScreen
 import android.employer_market.ui.screens.SelectedResumeScreen
 import android.employer_market.ui.screens.profile.ProfileRedactorScreen
-import android.employer_market.ui.screens.vacancy.ResumeRedactorScreen
-import android.employer_market.ui.screens.vacancy.VacancyScreen
+import android.employer_market.ui.screens.vacancy.VacanciesListScreen
+import android.employer_market.ui.screens.vacancy.VacancyRedactorScreen
 import android.employer_market.view_model.FavouritesViewModel
 import android.employer_market.view_model.MessengerViewModel
 import android.employer_market.view_model.ProfileViewModel
 import android.employer_market.view_model.ResponsesViewModel
-import android.employer_market.view_model.ResumeViewModel
 import android.employer_market.view_model.SearchViewModel
-import android.util.Log
+import android.employer_market.view_model.VacancyViewModel
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -204,39 +203,41 @@ fun NavigationGraph(navController: NavHostController) {
             }
         }
 
-        composable<Screen.VacancyScreen>(
-            enterTransition = { customEnterTransition },
-            exitTransition = { customExitTransition },
-            popEnterTransition = { customEnterTransition },
-            popExitTransition = { customExitTransition },
-        ) { entry ->
-            val resumeViewModel = entry.sharedViewModel<ResumeViewModel>(
-                navController = navController,
-                factory = ResumeViewModel.Factory
-            )
-            val state by resumeViewModel.uiState.collectAsStateWithLifecycle()
-            VacancyScreen(
-                navController = navController,
-                state = state,
-                onEvent = resumeViewModel::onEvent
-            )
-        }
-        composable<Screen.VacancyScreen>(
-            enterTransition = { customEnterTransition },
-            exitTransition = { customExitTransition },
-            popEnterTransition = { customEnterTransition },
-            popExitTransition = { customExitTransition },
-        ) { entry ->
-            val resumeViewModel = entry.sharedViewModel<ResumeViewModel>(
-                navController = navController,
-                factory = ResumeViewModel.Factory
-            )
-            val state by resumeViewModel.uiState.collectAsStateWithLifecycle()
-            ResumeRedactorScreen(
-                navController = navController,
-                state = state,
-                onEvent = resumeViewModel::onEvent
-            )
+        navigation<Screen.Vacancy>(startDestination = Screen.VacanciesListScreen) {
+            composable<Screen.VacanciesListScreen>(
+                enterTransition = { customEnterTransition },
+                exitTransition = { customExitTransition },
+                popEnterTransition = { customEnterTransition },
+                popExitTransition = { customExitTransition },
+            ) { entry ->
+                val vacancyViewModel = entry.sharedViewModel<VacancyViewModel>(
+                    navController = navController,
+                    factory = VacancyViewModel.Factory
+                )
+                val state by vacancyViewModel.uiState.collectAsStateWithLifecycle()
+                VacanciesListScreen(
+                    navController = navController,
+                    state = state,
+                    onEvent = vacancyViewModel::onEvent
+                )
+            }
+            composable<Screen.VacancyRedactorScreen>(
+                enterTransition = { customEnterTransition },
+                exitTransition = { customExitTransition },
+                popEnterTransition = { customEnterTransition },
+                popExitTransition = { customExitTransition },
+            ) { entry ->
+                val vacancyViewModel = entry.sharedViewModel<VacancyViewModel>(
+                    navController = navController,
+                    factory = VacancyViewModel.Factory
+                )
+                val state by vacancyViewModel.uiState.collectAsStateWithLifecycle()
+                VacancyRedactorScreen(
+                    navController = navController,
+                    state = state,
+                    onEvent = vacancyViewModel::onEvent
+                )
+            }
         }
     }
 }

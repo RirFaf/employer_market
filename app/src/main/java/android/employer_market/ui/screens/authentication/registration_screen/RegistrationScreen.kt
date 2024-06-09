@@ -2,6 +2,7 @@ package android.employer_market.ui.screens.authentication.registration_screen
 
 import android.employer_market.R
 import android.employer_market.ui.navigation.RegGraph
+import android.employer_market.ui.navigation.Screen
 import android.employer_market.view_model.RegUIState
 import android.employer_market.view_model.event.RegistrationEvent
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
@@ -39,10 +41,11 @@ fun RegistrationScreen(
                     Row(
                         modifier = Modifier
                             .clickable {
-                                navController.popBackStack(
-                                    route = "log_reg_screen",
-                                    inclusive = false
-                                )
+                                navController.navigate(Screen.LogRegScreen){
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                }
                             },
                         horizontalArrangement = Arrangement.Start
                     ) {

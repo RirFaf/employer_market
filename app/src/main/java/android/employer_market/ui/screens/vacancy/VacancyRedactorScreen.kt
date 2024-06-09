@@ -1,8 +1,8 @@
 package android.employer_market.ui.screens.vacancy
 
 import android.employer_market.ui.screens.custom_composables.CustomTextField
-import android.employer_market.view_model.ResumeUIState
-import android.employer_market.view_model.event.ResumeEvent
+import android.employer_market.view_model.VacancyUIState
+import android.employer_market.view_model.event.VacancyEvent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,10 +26,10 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResumeRedactorScreen(
-    state: ResumeUIState.Success,//TODO убрать Success
+fun VacancyRedactorScreen(
+    state: VacancyUIState.Success,//TODO убрать Success
     navController: NavController,
-    onEvent: (ResumeEvent) -> Unit
+    onEvent: (VacancyEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -41,7 +42,7 @@ fun ResumeRedactorScreen(
                         onClick = { navController.popBackStack() }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowLeft,
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                             contentDescription = ""
                         )
                     }
@@ -56,32 +57,49 @@ fun ResumeRedactorScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             CustomTextField(
-                heading = "Ключевые навыки",
-                value = state.keySkills,
+                heading = "Область подготовки",
+                value = state.currentVacancy.edArea,
                 onValueChange = {
-                    onEvent(ResumeEvent.SetKeySkills(it))
+                    onEvent(VacancyEvent.SetEdArea(it))
                 }
             )
             Spacer(modifier = Modifier.padding(8.dp))
             CustomTextField(
-                heading = "Курс",
-                value = state.course,
+                heading = "Формат занятости",
+                value = state.currentVacancy.formOfEmployment,
                 onValueChange = {
-                    onEvent(ResumeEvent.SetCourse(it))
+                    onEvent(VacancyEvent.SetFormOfEmployment(it))
                 }
             )
             Spacer(modifier = Modifier.padding(8.dp))
             CustomTextField(
-                heading = "Обо мне, дополнительно",
-                value = state.about,
+                heading = "Назвние вакансии",
+                value = state.currentVacancy.position,
                 onValueChange = {
-                    onEvent(ResumeEvent.SetAbout(it))
+                    onEvent(VacancyEvent.SetPosition(it))
+                }
+            )
+            Spacer(modifier = Modifier.padding(8.dp))
+            CustomTextField(
+                heading = "Требования",
+                value = state.currentVacancy.requirements,
+                onValueChange = {
+                    onEvent(VacancyEvent.SetRequirements(it))
+                }
+            )
+            Spacer(modifier = Modifier.padding(8.dp))
+            CustomTextField(
+                heading = "Зарплата",
+                value = state.currentVacancy.salary.toString(),
+                onValueChange = {
+                    onEvent(VacancyEvent.SetSalary(it))
                 }
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Button(
                 onClick = {
                     navController.popBackStack()
+                    onEvent(VacancyEvent.GetVacancies)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

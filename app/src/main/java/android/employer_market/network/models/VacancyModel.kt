@@ -6,12 +6,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class VacancyModel(
-    val id: String = "-1",
-    val position: String = "-1",
-    val salary: Int = -1,
-    val edArea: String = "-1",
-    val formOfEmployment: String = "-1",
-    val requirements: String = "-1",
-    val location: String = "-1",
+    val id: String = "",
+    val position: String = "",
+    val salary: Int = 0,
+    val edArea: String = "",
+    val formOfEmployment: String = "",
+    val requirements: String = "",
+    val location: String = "",
     val about: String = "",
 ) : Parcelable
