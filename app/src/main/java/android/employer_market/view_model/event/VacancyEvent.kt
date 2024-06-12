@@ -4,7 +4,10 @@ import android.employer_market.network.models.VacancyModel
 
 sealed interface VacancyEvent {
     data object GetVacancies : VacancyEvent
-    data object CreateEmptyVacancy : VacancyEvent
+    data object CreateVacancy : VacancyEvent
+    data object UpdateCurrentVacancy : VacancyEvent
+    data class DeleteVacancy(val vacancy: VacancyModel) : VacancyEvent
+    data class SetIsCurrentVacancyNew(val new: Boolean) : VacancyEvent
     data class SetVacancy(val input: VacancyModel) : VacancyEvent
     data class SetEdArea(val input: String) : VacancyEvent
     data class SetFormOfEmployment(val input: String) : VacancyEvent

@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.update
 sealed interface VacancyUIState {
     data class Success(
         val vacancies: List<VacancyModel> = listOf(),
-        val currentVacancy: VacancyModel = VacancyModel()
+        val currentVacancy: VacancyModel = VacancyModel(),
+        val isCurrentVacancyNew: Boolean = false
     ) : VacancyUIState
 
     data object Error : VacancyUIState
@@ -84,7 +85,7 @@ class VacancyViewModel(
                 _uiState.update {
                     it.copy(
                         currentVacancy = _uiState.value.currentVacancy.copy(
-                            salary = event.input.toInt()
+                            salary = event.input.ifBlank { "0" }.toInt()
                         )
                     )
                 }
@@ -98,8 +99,26 @@ class VacancyViewModel(
                 }
             }
 
-            is VacancyEvent.CreateEmptyVacancy -> {
-                vacancyRepository.createEmptyVacancy(vacancy = event.vacancy, onFailureAction = {})
+            is VacancyEvent.SetIsCurrentVacancyNew -> {
+                _uiState.update {
+                    it.copy(
+                        isCurrentVacancyNew = event.new
+                    )
+                }
+            }
+
+            is VacancyEvent.CreateVacancy -> {
+                vacancyRepository.createVacancy(
+                    vacancy = _uiState.value.currentVacancy,
+                    onFailureAction = {}
+                )
+            }
+
+            VacancyEvent.UpdateCurrentVacancy -> {
+                vacancyRepository.updateVacancy(
+                    vacancy = _uiState.value.currentVacancy,
+                    onFailureAction = {}
+                )
             }
 
             is VacancyEvent.GetVacancies -> {
@@ -113,6 +132,10 @@ class VacancyViewModel(
                     },
                     onFailureAction = {}
                 )
+            }
+
+            is VacancyEvent.DeleteVacancy -> {
+                vacancyRepository.deleteVacancy(vacancy = event.vacancy, {})
             }
         }
     }

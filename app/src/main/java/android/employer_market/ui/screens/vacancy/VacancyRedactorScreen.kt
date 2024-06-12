@@ -99,7 +99,11 @@ fun VacancyRedactorScreen(
             Button(
                 onClick = {
                     navController.popBackStack()
-                    onEvent(VacancyEvent.A)
+                    if (state.isCurrentVacancyNew) {
+                        onEvent(VacancyEvent.CreateVacancy)
+                    } else {
+                        onEvent(VacancyEvent.UpdateCurrentVacancy)
+                    }
                     onEvent(VacancyEvent.GetVacancies)
                 },
                 modifier = Modifier.fillMaxWidth()

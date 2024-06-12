@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,9 +54,9 @@ fun VacanciesListScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            navController.navigate(Screen.VacancyRedactorScreen)
                             onEvent(VacancyEvent.SetVacancy(VacancyModel()))
-                            onEvent(VacancyEvent.CreateEmptyVacancy)
+                            onEvent(VacancyEvent.SetIsCurrentVacancyNew(true))
+                            navController.navigate(Screen.VacancyRedactorScreen)
                         }
                     ) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = "add vacancy")
@@ -66,7 +68,7 @@ fun VacanciesListScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = ""
+                            contentDescription = "back button"
                         )
                     }
                 }
@@ -94,7 +96,12 @@ fun VacanciesListScreen(
                             vacancy = item,
                             onClick = {
                                 onEvent(VacancyEvent.SetVacancy(item))
+                                onEvent(VacancyEvent.SetIsCurrentVacancyNew(false))
                                 navController.navigate(Screen.VacancyRedactorScreen)
+                            },
+                            onDelete = {
+                                onEvent(VacancyEvent.DeleteVacancy(item))
+                                onEvent(VacancyEvent.GetVacancies)
                             }
                         )
                     }
@@ -102,9 +109,9 @@ fun VacanciesListScreen(
             } else {
                 Button(
                     onClick = {
-                        navController.navigate(Screen.VacancyRedactorScreen)
                         onEvent(VacancyEvent.SetVacancy(VacancyModel()))
-                        onEvent(VacancyEvent.CreateEmptyVacancy)
+                        onEvent(VacancyEvent.SetIsCurrentVacancyNew(true))
+                        navController.navigate(Screen.VacancyRedactorScreen)
                     }
                 ) {
                     Text(text = "Добавить вакансию")
@@ -118,6 +125,7 @@ fun VacanciesListScreen(
 private fun VacancyCard(
     vacancy: VacancyModel,
     onClick: () -> Unit,
+    onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     OutlinedCard(
@@ -130,31 +138,44 @@ private fun VacancyCard(
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
     ) {
-        Column(
-            Modifier
-                .fillMaxWidth()
+        Row(
+            modifier = Modifier
                 .padding(vertical = 16.dp, horizontal = 14.dp)
         ) {
-            Text(
-                text = vacancy.position,
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-            )
-            Spacer(modifier = Modifier.padding(4.dp))
-            Text(
-                text = vacancy.salary.toString(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.padding(2.dp))
-            Text(
-                text = vacancy.edArea,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                fontSize = 14.sp
-            )
+                    .fillMaxWidth(0.9f)
+            ) {
+                Text(
+                    text = vacancy.position,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                )
+                Spacer(modifier = Modifier.padding(4.dp))
+                Text(
+                    text = vacancy.salary.toString(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(2.dp))
+                Text(
+                    text = vacancy.edArea,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    fontSize = 14.sp
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.End
+            ) {
+                IconButton(onClick = { onDelete() }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "delete button")
+                }
+            }
         }
     }
 }
