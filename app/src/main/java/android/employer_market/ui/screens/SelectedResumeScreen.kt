@@ -63,8 +63,8 @@ fun SelectedResumeScreen(navController: NavController, resume: ResumeModel) {
                 actions = {
                     IconButton(
                         onClick = {
-                            Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
-                                .show()
+//                            Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
+//                                .show()
                             liked = !liked
                         }
                     ) {
@@ -106,6 +106,8 @@ fun SelectedResumeScreen(navController: NavController, resume: ResumeModel) {
             CustomText(heading = "Курс", content = resume.course)
             Spacer(modifier = Modifier.padding(8.dp))
             CustomText(heading = "Расположение", content = resume.city)
+            Spacer(modifier = Modifier.padding(8.dp))
+            CustomText(heading = "Ключевые навыки", content = resume.keySkills.ifBlank { "Не указано" })
             Spacer(modifier = Modifier.padding(8.dp))
             CustomText(heading = "Ожидаемая заработная плата", content = resume.salary.ifBlank { "Не указано" })
             Spacer(modifier = Modifier.padding(8.dp))

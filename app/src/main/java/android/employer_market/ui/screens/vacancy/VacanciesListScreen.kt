@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,6 +58,16 @@ fun VacanciesListScreen(
                         }
                     ) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = "add vacancy")
+                    }
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.navigate(Screen.ProfileScreen) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = ""
+                        )
                     }
                 }
             )

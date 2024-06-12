@@ -325,9 +325,7 @@ fun SearchScreen(
                                         )
                                     }
                                 )
-                                onEvent(
-                                    SearchEvent.GetResumes
-                                )
+                                onEvent(SearchEvent.GetResumes)
                                 onEvent(SearchEvent.ShowFilterDialog)
                             },
                             modifier = Modifier

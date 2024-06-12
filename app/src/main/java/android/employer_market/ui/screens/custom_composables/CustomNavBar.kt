@@ -44,7 +44,7 @@ fun CustomNavBar(navController: NavController) {
             }
         ),
         BottomNavItem(
-            title = "Избранное",
+            title = "Лучшее",
             screen = Screen.FavouritesScreen,
             selectedIcon = Icons.Filled.Favorite,
             unselectedIcon = Icons.Outlined.FavoriteBorder,
@@ -65,7 +65,7 @@ fun CustomNavBar(navController: NavController) {
         ),
         BottomNavItem(
             title = "Чаты",
-            screen = Screen.MessengerScreen,
+            screen = Screen.Messenger,
             selectedIcon = Icons.Filled.Email,
             unselectedIcon = Icons.Outlined.Email,
             hasNews = false,

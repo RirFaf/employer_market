@@ -115,38 +115,51 @@ fun NavigationGraph(navController: NavHostController) {
                 state = state
             )
         }
-        composable<Screen.ChatListScreen>(
-            enterTransition = { customEnterTransition },
-            exitTransition = { customExitTransition },
-            popEnterTransition = { customEnterTransition },
-            popExitTransition = { customExitTransition },
-        ) {
-            ChatListScreen(navController = navController)
-        }
 
-        composable<Screen.MessengerScreen>(
-            enterTransition = { customEnterTransition },
-            exitTransition = {
-                fadeOut(
-                    animationSpec = tween(0, easing = LinearEasing)
+        navigation<Screen.Messenger>(startDestination = Screen.ChatListScreen){
+            composable<Screen.ChatListScreen>(
+                enterTransition = { customEnterTransition },
+                exitTransition = { customExitTransition },
+                popEnterTransition = { customEnterTransition },
+                popExitTransition = { customExitTransition },
+            ) { entry ->
+                val messengerViewModel = entry.sharedViewModel<MessengerViewModel>(
+                    factory = MessengerViewModel.Factory,
+                    navController = navController
                 )
-            },
-            popEnterTransition = { customEnterTransition },
-            popExitTransition = {
-                fadeOut(
-                    animationSpec = tween(0, easing = LinearEasing)
+                val state by messengerViewModel.uiState.collectAsStateWithLifecycle()
+
+                ChatListScreen(
+                    navController = navController,
+                    onEvent = messengerViewModel::onEvent,
+                    state = state
                 )
-            },
-        ) {
-            val messengerViewModel = viewModel<MessengerViewModel>(
-                factory = MessengerViewModel.Factory
-            )
-            val state by messengerViewModel.uiState.collectAsStateWithLifecycle()
-            MessengerScreen(
-                navController = navController,
-                onEvent = messengerViewModel::onEvent,
-                state = state
-            )
+            }
+            composable<Screen.MessengerScreen>(
+                enterTransition = { customEnterTransition },
+                exitTransition = {
+                    fadeOut(
+                        animationSpec = tween(0, easing = LinearEasing)
+                    )
+                },
+                popEnterTransition = { customEnterTransition },
+                popExitTransition = {
+                    fadeOut(
+                        animationSpec = tween(0, easing = LinearEasing)
+                    )
+                },
+            ) {entry ->
+                val messengerViewModel = entry.sharedViewModel<MessengerViewModel>(
+                    factory = MessengerViewModel.Factory,
+                    navController = navController
+                )
+                val state by messengerViewModel.uiState.collectAsStateWithLifecycle()
+                MessengerScreen(
+                    navController = navController,
+                    onEvent = messengerViewModel::onEvent,
+                    state = state
+                )
+            }
         }
 
         composable<Screen.ResponsesListScreen>(

@@ -2,8 +2,6 @@ package android.employer_market.network.models
 
 data class MessageModel(
     val text: String,
-    val author: User,
-) {
-    val isFromMe: Boolean
-        get() = author.id == "0"
-}
+    val senderId: String,
+    val timestamp: String,
+)

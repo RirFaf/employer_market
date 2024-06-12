@@ -1,7 +1,8 @@
 package android.employer_market.ui.screens.custom_composables
 
+import android.employer_market.data.constants.ResponseStatus
+import android.employer_market.network.models.ResumeModel
 import android.employer_market.network.models.VacancyModel
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,12 +13,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -30,18 +27,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
 @Composable
 fun ResponseCard(
     modifier: Modifier = Modifier,
-    onCardClick:()->Unit,
-    onChatButtonClick:()->Unit,
-    onDelete:()->Unit,
-    vacancy:VacancyModel,
+    onCardClick: () -> Unit,
+    onApproveButtonClick: () -> Unit,
+    onDenyButtonClick: () -> Unit,
+    onChatButtonClick: () -> Unit,
+    onInviteButtonClick: () -> Unit,
+    resume: Pair<ResumeModel, VacancyModel>,
+    status: String
 ) {
-    val localContext = LocalContext.current
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val deleteButtonColor = if (isPressed) Color.Red else MaterialTheme.colorScheme.onPrimaryContainer
     OutlinedCard(
         modifier = modifier
             .clickable {
@@ -58,52 +55,83 @@ fun ResponseCard(
                 .padding(vertical = 16.dp, horizontal = 14.dp)
         ) {
             Text(
-                text = vacancy.position,
+                text = "${resume.first.secondName} ${resume.first.firstName} ${resume.first.patronymicName} ",
                 modifier = Modifier
                     .fillMaxWidth(),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.padding(4.dp))
             Text(
-                text = vacancy.salary.toString(),
+                text = when (status) {
+                    ResponseStatus.INVITE -> "Приглашён на вакансию"
+                    ResponseStatus.DENIED -> "Откликался на вакансию"
+                    else -> "Откликается на вакансию"
+                },
                 modifier = Modifier
                     .fillMaxWidth(),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = if (status == ResponseStatus.INVITE) {
+                    Color.Green
+                } else {
+                    Color.Unspecified
+                }
             )
             Spacer(modifier = Modifier.padding(2.dp))
-//            Text(
-//                text = vacancy.companyName,
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                fontSize = 14.sp
-//            )
+            Text(
+                text = resume.second.position,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
             Spacer(modifier = Modifier.padding(4.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(
-                    onClick = {
-                        Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
-                            .show()
-                        onChatButtonClick()
-                    },
-                ) {
-                    Text(text = "Перейти в чат")
-                }
-                IconButton(
-                    onClick = {
-                        Toast.makeText(localContext, "Work in progress", Toast.LENGTH_SHORT)
-                            .show()
-                        onDelete()
-                    },
-                    interactionSource = interactionSource,
-                    colors = IconButtonDefaults.iconButtonColors(contentColor = deleteButtonColor)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete"
-                    )
+                if (status == ResponseStatus.SENT || status == ResponseStatus.APPROVED) {
+                    Button(
+                        onClick = {
+                            if (status == ResponseStatus.SENT) {
+                                onApproveButtonClick()
+                            } else {
+                                onChatButtonClick()
+                            }
+                        },
+                    ) {
+                        Text(
+                            text = if (status == ResponseStatus.SENT) {
+                                "Одобрить"
+                            } else {
+                                "Перейти в чат"
+                            }
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            if (status == ResponseStatus.SENT) {
+                                onDenyButtonClick()
+                            } else {
+                                onInviteButtonClick()
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Red,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(
+                            text = if (status == ResponseStatus.SENT) {
+                                "Отклонить"
+                            } else {
+                                "Закрыть чат"
+                            }
+                        )
+                    }
+                } else if (status == ResponseStatus.DENIED) {
+                    Text(text = "Отклонено", color = Color.Red)
                 }
             }
         }

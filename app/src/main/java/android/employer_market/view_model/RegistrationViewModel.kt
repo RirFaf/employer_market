@@ -24,18 +24,16 @@ sealed interface RegUIState {
         val password1: String = "",
     ) : RegUIState
 
-    object Error : RegUIState
-    object Loading : RegUIState
+    data object Error : RegUIState
+    data object Loading : RegUIState
 }
 
 class RegViewModel(
     private val registrationRepository: RegistrationRepository
 ) : ViewModel() {
     private val tag = "VMTAG"
-    private val db = SMFirebase
 
     private val _uiState = MutableStateFlow(RegUIState.Success())//переделать под обработку REST
-
     val uiState: StateFlow<RegUIState.Success> = _uiState.asStateFlow()
 
     init {

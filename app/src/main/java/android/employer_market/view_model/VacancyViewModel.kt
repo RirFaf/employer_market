@@ -99,7 +99,7 @@ class VacancyViewModel(
             }
 
             is VacancyEvent.CreateEmptyVacancy -> {
-                vacancyRepository.createEmptyVacancy(onFailureAction = {})
+                vacancyRepository.createEmptyVacancy(vacancy = event.vacancy, onFailureAction = {})
             }
 
             is VacancyEvent.GetVacancies -> {

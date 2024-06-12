@@ -29,29 +29,13 @@ class AppActivity : ComponentActivity() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
 
             //Убираем нижнюю навигацию, когда заходим в переписку
-            when (navBackStackEntry?.destination?.route) {
-                "search_screen" -> {
-                    showBottomBar = true
+            showBottomBar = when (navBackStackEntry?.destination?.route?.split(".")?.last()) {
+                "MessengerScreen" -> {
+                    false
                 }
 
-                "vacancy_screen" -> {
-                    showBottomBar = true
-                }
-
-                "favourites_screen" -> {
-                    showBottomBar = true
-                }
-
-                "responses_list_screen" -> {
-                    showBottomBar = true
-                }
-
-                "chat_list_screen" -> {
-                    showBottomBar = true
-                }
-
-                "messenger_screen" -> {
-                    showBottomBar = false
+                else -> {
+                    true
                 }
             }
             SkillsMarketTheme {

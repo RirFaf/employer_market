@@ -1,5 +1,6 @@
 package android.employer_market.ui.screens
 
+import android.employer_market.data.constants.ResponseStatus
 import android.employer_market.ui.navigation.Screen
 import android.employer_market.ui.screens.custom_composables.ResponseCard
 import android.employer_market.view_model.ResponsesUIState
@@ -31,29 +32,29 @@ import androidx.navigation.NavController
 fun ResponsesListScreen(
     navController: NavController,
     state: ResponsesUIState.Success,
-    onEvent:(ResponsesEvent)->Unit
+    onEvent: (ResponsesEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(text = "Отклики") },
                 actions = {
-                    IconButton(
-                        onClick = {}
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Notifications,
-                            contentDescription = "Show menu",
-                        )
-                    }
-                    IconButton(
-                        onClick = { }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Show menu",
-                        )
-                    }
+//                    IconButton(
+//                        onClick = {}
+//                    ) {
+//                        Icon(
+//                            imageVector = Icons.Outlined.Notifications,
+//                            contentDescription = "Show menu",
+//                        )
+//                    }
+//                    IconButton(
+//                        onClick = { }
+//                    ) {
+//                        Icon(
+//                            imageVector = Icons.Default.Menu,
+//                            contentDescription = "Show menu",
+//                        )
+//                    }
                 }
             )
         },
@@ -70,34 +71,75 @@ fun ResponsesListScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
                 contentPadding = PaddingValues(4.dp)
             ) {
-//                itemsIndexed(
-//                    state.responses.vacancies
-//                ) { _, item ->
-//                    ResponseCard(
-//                        vacancy = item,
-//                        onCardClick = {
-//                            navController.navigate(
-//                                route = Screen.SelectedResumeScreen.route +
-//                                        "/${item.id}" +
-//                                        "/${item.position}" +
-//                                        "/${item.salary}" +
-//                                        "/${item.companyName}" +
-//                                        "/${item.edArea}" +
-//                                        "/${item.formOfEmployment}" +
-//                                        "/${item.requirements}" +
-//                                        "/${item.location}" +
-//                                        "/${if (item.about.isEmpty()) " " else item.about}"
-//                            ) {
-//                                launchSingleTop = false
-//                                restoreState = true
-//                            }
-//                        },
-//                        onChatButtonClick = {},
-//                        onDelete = {
-//                            onEvent(ResponsesEvent.DeleteResponse(item))
-//                        }
-//                    )
-//                }
+                itemsIndexed(
+                    state.responses
+                ) { _, item ->
+                    ResponseCard(
+                        resume = item,
+                        onCardClick = {
+                            navController.navigate(
+                                route = Screen.SelectedResumeScreen(
+                                    id = item.first.id,
+                                    studentId = item.first.studentId,
+                                    salary = item.first.salary,
+                                    keySkills = item.first.keySkills,
+                                    secondName = item.first.secondName,
+                                    firstName = item.first.firstName,
+                                    patronymicName = item.first.patronymicName,
+                                    birthDate = item.first.birthDate,
+                                    university = item.first.university,
+                                    institute = item.first.institute,
+                                    course = item.first.course,
+                                    aboutMe = item.first.aboutMe,
+                                    gender = item.first.gender,
+                                    city = item.first.city,
+                                    direction = item.first.direction,
+                                    liked = item.first.liked,
+                                )
+                            ) {
+                                launchSingleTop = false
+                                restoreState = true
+                            }
+                        },
+                        onChatButtonClick = {
+                            onEvent(
+                                ResponsesEvent.AddChat(
+                                    vacancyId = item.second.id,
+                                    studentId = item.first.studentId
+                                )
+                            )
+                            navController.navigate(Screen.MessengerScreen)
+                        },
+                        onApproveButtonClick = {
+                            onEvent(
+                                ResponsesEvent.UpdateResponseStatus(
+                                    studentId = item.first.studentId,
+                                    vacancyId = item.second.id,
+                                    status = ResponseStatus.APPROVED
+                                )
+                            )
+                        },
+                        onDenyButtonClick = {
+                            onEvent(
+                                ResponsesEvent.UpdateResponseStatus(
+                                    studentId = item.first.studentId,
+                                    vacancyId = item.second.id,
+                                    status = ResponseStatus.DENIED
+                                )
+                            )
+                        },
+                        onInviteButtonClick = {
+                            onEvent(
+                                ResponsesEvent.UpdateResponseStatus(
+                                    studentId = item.first.studentId,
+                                    vacancyId = item.second.id,
+                                    status = ResponseStatus.INVITE
+                                )
+                            )
+                        },
+                        status = item.first.responseStatus
+                    )
+                }
             }
         }
     }

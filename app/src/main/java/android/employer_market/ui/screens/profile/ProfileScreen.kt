@@ -164,8 +164,6 @@ fun ProfileScreen(
                 color = if (state.company.age.isNotBlank()) Color.Unspecified else Color.Gray
             )
             Spacer(modifier = Modifier.height(16.dp))
-            CustomText(heading = "Количество открытых вакансий", content = "4")
-            Spacer(modifier = Modifier.height(16.dp))
             CustomText(
                 heading = "Сферы деятельности",
                 content = state.company.profArea.ifBlank { "Не указано" },
